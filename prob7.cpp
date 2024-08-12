@@ -46,8 +46,6 @@ int main()
 		if (D > max)
 			max = D;
 	}
-	for (int j = 1; j <= N; j++) //visied 배열 초기화
-		visited[j] = 0;
 	cout << max;
 
 	return 0;
