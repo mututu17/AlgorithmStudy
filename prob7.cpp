@@ -3,8 +3,8 @@
 using namespace std;
 vector<pair<int, int>> graph[100001];
 bool visited[100001];
-int N;
-int DFS(int root)
+int leaf, max_d;
+void DFS(int root, int dist)
 {
 	visited[root] = 1;
 	int max_dist = 0;
@@ -14,15 +14,19 @@ int DFS(int root)
 		int d = graph[root][i].second;
 		if (!visited[V]) //방문하지 않은 노드
 		{
-			int dist = DFS(V) + d;
-			if (dist > max_dist)
-				max_dist = dist;
+			DFS(V, dist + d);
 		}
 	}
-	return max_dist;
+	if (dist > max_d)
+	{
+		leaf = root;
+		max_d = dist;
+	}
+	return;
 }
 int main()
 {
+	int N;
 	cin >> N;
 	for (int i = 1; i <= N; i++) // 1 ~ N 정점
 	{
@@ -37,16 +41,11 @@ int main()
 			graph[v1].push_back(make_pair(v2, dist));
 		}
 	}
-	int max = 0;
-	for (int i = 1; i <= N; i++)
-	{
-		for (int j = 1; j <= N; j++) //visied 배열 초기화
-			visited[j] = 0;
-		int D = DFS(i);
-		if (D > max)
-			max = D;
-	}
-	cout << max;
-
+	DFS(1, 0); //리프노드 찾기
+	for (int j = 1; j <= N; j++) //visied 배열 초기화
+		visited[j] = 0;
+	max_d = 0; //최대값 초기화
+	DFS(leaf, 0); //리프노드에서 DFS하기
+	cout << max_d;
 	return 0;
 }
