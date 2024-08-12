@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-vector<pair<int, int>> graph[100001];
-bool visited[100001];
+vector<pair<int, int>> graph[10001];
+bool visited[10001];
 int leaf, max_d;
 void DFS(int root, int dist)
 {
@@ -27,18 +27,13 @@ int main()
 {
 	int N;
 	cin >> N;
-	for (int i = 1; i <= N; i++) // 1 ~ N 정점
+	for (int i = 0; i < N - 1; i++) // 1 ~ N 정점
 	{
 		int v1, v2, dist;
-		cin >> v1;
-		while (1) //-1이 입력될 때 까지 연결된 정점의 정보 입력받기
-		{
-			cin >> v2;
-			if (v2 == -1)
-				break;
-			cin >> dist;
-			graph[v1].push_back(make_pair(v2, dist));
-		}
+		cin >> v1 >> v2 >> dist;
+		graph[v1].push_back(make_pair(v2, dist));
+		graph[v2].push_back(make_pair(v1, dist));
+
 	}
 	DFS(1, 0); //리프노드 찾기
 	for (int j = 1; j <= N; j++) //visied 배열 초기화
