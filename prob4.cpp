@@ -6,6 +6,9 @@ int main()
 	int list[10001]; //가지고 있는 카드 저장
 	int N; //가지고 있는 카드의 수
 	int M; //가지고 있는 지 확인해야 하는 카드의 수 
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 	cin >> N;
 	for (int i = 0; i < N; i++)
 	{
