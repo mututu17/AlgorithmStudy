@@ -1,58 +1,43 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include <queue>
+#include <algorithm>
 using namespace std;
-
-int N, M; // 지도의 크기 N*M
-vector<vector<int>> moving = { {-1,0}, {1,0}, {0,1}, {0,-1} };
-vector<vector<int>> arr; // 2차원 벡터 선언
-vector<vector<int>> visited; //방문했던 칸 표시하기
-vector<vector<int>> dist; //현재 칸까지 이동한 거리를 기록
-queue<pair<int, int>> q;
-
-void BFS(int x, int y)
-{ 
-    visited[x][y] = 1; //시작위치 방문했음을 표시
-    dist[x][y] = 1; //시작위치 
-    q.push(make_pair(x, y));
-    while (!q.empty())
-    {
-        int X = q.front().first; //큐의 맨 앞에 X좌표 저장
-        int Y = q.front().second; //큐의 맨 앞에 Y좌표 저장
-        q.pop();
-        for (int i = 0; i < 4; i++) //다음 이동할 칸을 큐에 넣기
-        {
-            int next_x = X + moving[i][0]; //상하좌우에서 이동 가능한 칸 찾기
-            int next_y = Y + moving[i][1];
-            if (0 <= next_x && next_x < N && 0 <= next_y && next_y < M)// 0 <= x < N, 0 <= y < M  
-            {
-                if (arr[next_x][next_y] == 1 && visited[next_x][next_y] == 0)
-                { //방문한적 없는 칸이고, 미로의 이동할 수 있는 칸
-                    q.push(make_pair(next_x, next_y));
-                    visited[next_x][next_y] = 1; //방문했음 표시
-                    dist[next_x][next_y] = dist[X][Y] + 1; //이 칸까지 오는데 걸리는 최소 거리
-                }
-            }
-        }
-    }
-}
 int main()
 {
-    cin >> N >> M;
-    arr.resize(N, vector<int>(M)); // 2차원 벡터 크기 조정
-    visited.resize(N, vector<int>(M));
-    dist.resize(N, vector<int>(M));
-    for (int i = 0; i < N; i++) // N*M 지도 입력 받기
-    {
-        string line;
-        cin >> line; // 문자열로 입력 받기
-        for (int j = 0; j < M; j++)
-        {
-            arr[i][j] = line[j] - '0'; // 문자를 정수로 변환하여 저장
-        }
-    }
-    BFS(0, 0);
-    cout << dist[N - 1][M - 1];
-    return 0;
+	int House[10001]; //집의 좌표 저장
+	int N; //공유기를 설치할 수 있는 집의 개수
+	int C; //설치해야 하는 공유기의 수 
+	int result = 0; //가장 인접한 공유기 사이의 최대 거리
+	cin >> N >> C;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> House[i];
+	}
+	sort(House, House + N); //오름차순으로 정렬
+	int left = 1; //최소 거리 
+	int right = House[N - 1] - House[0]; // 최대 거리(마지막 집 - 첫 번째 집)
+	int mid;
+	while (left <= right)
+	{
+		mid = (right + left) / 2;
+		int count = 1; //첫 번째 집에 공유기 설치
+		int lastRoute = House[0]; //마지막에 설치한 공유기의 위치
+		for (int i = 0; i < N; i++)
+		{
+			if (House[i] - lastRoute >= mid) //설정한 최대 거리 이상인 곳에 공유기를 설치하기
+			{
+				lastRoute = House[i];
+				count++;
+			}
+		}
+		if (count >= C) //최적의 값을 찾기위해 더 탐색
+		{
+			left = mid + 1;
+			result = max(result, mid);
+		}
+		else //조건을 만족하는 답을 찾기 위해 더 탐색
+		{
+			right = mid - 1;
+		}
+	}
+	cout << result;
 }
